@@ -1,6 +1,5 @@
 <template>
-  <div>
-  <h2>Transformer input</h2>
+  <div ref="wrapper" class="textTransformer">
     <input
       v-if="useInput"
       type="text"
@@ -24,59 +23,66 @@ export default {
   props: {
     initialText: {
       type: String,
-      default: ''
+      default: '',
     },
     switchThreshold: {
       type: Number,
-      default: 15
+      default: 15,
     },
     maxlength: {
       type: Number,
-      default: 250
-    }
+      default: 250,
+    },
   },
   data() {
     return {
       text: this.initialText,
-      useInput: true
+      useInput: true,
     };
   },
-  methods: {
-    checkForSwitch() {
-      if (this.text.length >= this.switchThreshold && this.useInput) {
+  mounted() {
+    // Call checkForSwitch when the component is mounted to select the correct input/textarea element
+    this.checkForSwitch();
+  },
+    methods: {
+      checkForSwitch() {
+      const inputOrTextarea = this.useInput ? this.$refs.input : this.$refs.textarea;
+      const isOverflowing = inputOrTextarea.scrollWidth > this.$refs.wrapper.offsetWidth;
+
+      console.log(this.$refs.wrapper.offsetWidth)
+      console.log('text length:', this.text.length);
+      console.log('useInput:', this.useInput);
+      console.log('isOverflowing:', isOverflowing);
+
+      if (this.text.length >= this.switchThreshold && isOverflowing) {
+        // Switch to textarea
         this.useInput = false;
         this.$nextTick(() => {
           this.$refs.textarea.focus();
         });
-      } else if (this.text.length < this.switchThreshold && !this.useInput) {
+      } else if (this.text.length < this.switchThreshold && !isOverflowing) {
+        // Switch to input
         this.useInput = true;
         this.$nextTick(() => {
           this.$refs.input.focus();
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-textarea {
-  height: 100px;
-}
-
-input{
-
-}
-
-input, textarea{
-  width: 300px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
+.textTransformer input,
+.textTransformer textarea {
+  padding: 10px 10px;
+  border: 2px solid #ddd;
   background-color: #f8f8f8;
-  font-size: 16px;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.textTransformer{
+  width: 200px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="container">
+  <h2>Transformer input</h2>
     <TxtSwitch
       v-model="text"
       :switchThreshold="keyNr"
@@ -17,7 +18,7 @@ export default {
   },
   data() {
     return{
-      keyNr: 30
+      keyNr: 16
     }
   }
 }
@@ -28,8 +29,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
